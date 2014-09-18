@@ -48,6 +48,6 @@ void HTTPflush(HTTPQueue_t* queue);
 
 int HTTPenqueue(HTTPQueue_t* queue, const char* endpoint, const char* useragent, const char* query, unsigned int query_len);
 
-int HTTPsend(const char* endpoint, const char* useragent, const char* query, unsigned int query_len);
+int HTTPsend(const char* endpoint, const char* useragent, const char* query, unsigned int query_len, const char *cacertpath);
 
 #endif /* HTTP_H */

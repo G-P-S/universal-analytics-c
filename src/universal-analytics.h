@@ -199,10 +199,10 @@ typedef UAOptions_t UAOptions;
 
 
 /* Creates Google Analytics tracker state objects */
-UATracker createTracker(char* trackingId, char* clientId, char* userId);
+UATracker createTracker(char* trackingId, char* clientId, char* userId, const char *caCertPath);
 
 /* Initialize tracker state */
-void initTracker(UATracker tracker, char* trackingId, char* clientId, char* userId);
+void initTracker(UATracker tracker, char* trackingId, char* clientId, char* userId, const char *caCertPath);
 
 /* Set flags to tune the funcionality of the tracker */
 void setTrackerOption(UATracker tracker, UATrackerOption_t option, int value);

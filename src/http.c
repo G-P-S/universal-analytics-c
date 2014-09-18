@@ -128,7 +128,7 @@ int HTTPenqueue(HTTPQueue_t* queue, const char* endpoint, const char* useragent,
   return queue->count;
 }
 
-int HTTPsend(const char* endpoint, const char* useragent, const char* query, unsigned int query_len) 
+int HTTPsend(const char* endpoint, const char* useragent, const char* query, unsigned int query_len, const char *cacertpath) 
 {
   int   ret;
   CURL* curl;
@@ -152,6 +152,7 @@ int HTTPsend(const char* endpoint, const char* useragent, const char* query, uns
   curl_easy_setopt(curl, CURLOPT_USERAGENT, useragent);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_null_data_handler);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+  curl_easy_setopt(curl, CURLOPT_CAINFO, cacertpath);
 
   ret = curl_easy_perform(curl);
 

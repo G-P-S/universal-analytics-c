@@ -29,6 +29,10 @@ static const char UA_PROTOCOL_VERSION[] = "1";
 /* Mapping for hexadecimal conversion */
 static const char _hexchar[] = "0123456789abcdef";
 
+/* location of SSL certificate path */
+#define CERTPATHMAXLEN 2048
+static char cacertpath[CERTPATHMAXLEN] = "";
+
 /* Copies the input string to output with proper encoding.
  * Allows for populating substrings (i.e. ranges of memory) in existing string buffers.
  */
@@ -292,7 +296,7 @@ int getTrackerOption(UATracker_t* tracker, UATrackerOption_t option){
  *  - Populate parameter names
  *  - Define lifetime tracker values
  */
-void initTracker(UATracker_t* tracker, char* trackingId, char* clientId, char* userId){
+void initTracker(UATracker_t* tracker, char* trackingId, char* clientId, char* userId, const char *caCertPath){
   assert(NULL != tracker);
   cleanTracker(tracker);
   
@@ -300,6 +304,9 @@ void initTracker(UATracker_t* tracker, char* trackingId, char* clientId, char* u
 
   populateTypeNames(tracker->map_types);
   populateParameterNames(tracker->map_parameters, tracker->map_custom);
+
+  if (caCertPath != NULL && strlen(caCertPath) > 0)
+      strncpy(cacertpath, caCertPath, CERTPATHMAXLEN);
 
   memset(& tracker->query, 0, UA_MAX_QUERY_LEN);
 
@@ -315,9 +322,9 @@ void initTracker(UATracker_t* tracker, char* trackingId, char* clientId, char* u
 }
 
 /* Allocate space for a tracker & initialize it */
-UATracker_t* createTracker(char* trackingId, char* clientId, char* userId){
+UATracker_t* createTracker(char* trackingId, char* clientId, char* userId, const char *caCertPath){
   UATracker_t* new_tracker = malloc(sizeof(UATracker_t));
-  initTracker(new_tracker, trackingId, clientId, userId);
+  initTracker(new_tracker, trackingId, clientId, userId, caCertPath);
   return new_tracker;
 }
 
@@ -452,7 +459,7 @@ int mySendTracking(UATracker_t* tracker, trackingType_t type, UAOptions_t* opts)
   memset(query, 0, UA_MAX_QUERY_LEN);
   query_len = assembleQueryString(tracker, query, 0);
 
-  ret = HTTPsend(UA_ENDPOINT, UA_USERAGENT, query, query_len);
+  ret = HTTPsend(UA_ENDPOINT, UA_USERAGENT, query, query_len, cacertpath);
 
   resetQuery(tracker);
 
