@@ -37,9 +37,9 @@ static char cacertpath[CERTPATHMAXLEN] = "";
  * Allows for populating substrings (i.e. ranges of memory) in existing string buffers.
  */
 static int encodeURIComponent(char input[], char output[], const unsigned int input_len, const UABoolean_t add_null){
+  int i, j = 0;
   assert(NULL != output); // avoid null-dereference
   assert(NULL != input); // avoid null-dereference
-  int i, j = 0;
   for(i = 0; i < input_len; i++){
     if(isalnum((unsigned char) input[i]) || input[i] == '-' || input[i] == '.' || input[i] == '~'){
       output[j++] = input[i];
@@ -400,11 +400,11 @@ unsigned int assembleQueryString(UATracker_t* tracker, char* query, unsigned int
 
 /* Assemble a query from a tracker and send it through CURL */
 void queueTracking(UATracker_t* tracker){
+  unsigned int query_len;
+  char* query = tracker->query;
   assert(NULL != tracker);
   assert((*tracker).__configured__ == UA_MEM_MAGIC_CONFIG);
 
-  unsigned int query_len;
-  char* query = tracker->query;
   memset(query, 0, UA_MAX_QUERY_LEN);
   query_len = assembleQueryString(tracker, query, 0);
 

@@ -94,13 +94,17 @@ void HTTPflush(HTTPQueue_t* queue){
 /* Enqueue a POST using CURL */
 int HTTPenqueue(HTTPQueue_t* queue, const char* endpoint, const char* useragent, const char* query, unsigned int query_len){
   
+    CURLM* handler;
+    CURL* curl;
+    unsigned int queue_capacity;
+
   assert(NULL != queue);
   assert(NULL != query);
   assert(NULL != endpoint);
   assert(NULL != useragent);
 
-  CURLM* handler = queue->handler;
-  CURL* curl = curl_easy_init();
+  handler = queue->handler;
+  curl = curl_easy_init();
 
   if(DEBUG_PRINT_CURL_QUERY)
     printf("Queueing: \n\t- %s\n\t- %s\n\t- %s\n", endpoint, useragent, query);
@@ -109,7 +113,7 @@ int HTTPenqueue(HTTPQueue_t* queue, const char* endpoint, const char* useragent,
     curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
  
 
-  unsigned int queue_capacity = (UA_MAX_QUERY_QUEUE - queue->count);
+ queue_capacity = (UA_MAX_QUERY_QUEUE - queue->count);
 
   if(queue_capacity == 0){
      HTTPflush(queue); // Process queued requests if no space remains
