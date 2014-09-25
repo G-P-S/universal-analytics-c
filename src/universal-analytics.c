@@ -378,8 +378,8 @@ unsigned int assembleQueryString(UATracker_t* tracker, char* query, unsigned int
     assert((name == client_id) ? (value != NULL) : 1);
     if(NULL == name || NULL == value)  continue;
 
-    name_len = strlen(name);
-    value_len = strlen(value);
+    name_len = (int)strlen(name);
+    value_len = (int)strlen(value);
 
     if(i > 0){
       strncpy(query + offset, "&", 1);
