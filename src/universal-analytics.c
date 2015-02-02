@@ -324,7 +324,10 @@ void initTracker(UATracker_t* tracker, char* trackingId, char* clientId, char* u
 /* Allocate space for a tracker & initialize it */
 UATracker_t* createTracker(char* trackingId, char* clientId, char* userId, const char *caCertPath){
   UATracker_t* new_tracker = malloc(sizeof(UATracker_t));
-  initTracker(new_tracker, trackingId, clientId, userId, caCertPath);
+  assert(NULL != new_tracker);
+  if (NULL != new_tracker) {
+    initTracker(new_tracker, trackingId, clientId, userId, caCertPath);
+  }
   return new_tracker;
 }
 
